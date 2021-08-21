@@ -1,7 +1,9 @@
 import React, { useCallback, useState } from "react";
-import { auth } from "./firebase";
+import { withRouter } from "react-router-dom";
+import { auth, db } from "./firebase";
 
-const Login = () => {
+
+const Login = (props) => {
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
   const [error, setError] = useState(null);
@@ -27,8 +29,37 @@ const Login = () => {
     setError(null);
     if (esRegistro) {
       registrar();
+    } else {
+      login();
     }
   };
+
+  //--------------------------------------------------------------------------------
+
+  const login = useCallback(async () => {
+    try {
+      const resp = await auth.signInWithEmailAndPassword(email, pass);
+      console.log("clg resp user in try", resp.user);
+      setEmail("");
+      setPass("");
+      setError(null);
+      props.history.push("/admin")
+    } catch (error) {
+      console.log("log error en login", error);
+      if (error.code === "auth/user-not-found") {
+        setError("Email no registrado");
+      }
+      if (error.code === "auth/wrong-password") {
+        setError(
+          "la contrasela apesta"
+        )};
+      if (error.code === "auth/too-many-requests") {
+        setError(
+          "Demasiados intentos: se ha bloqueado el acceso temporalmente, pruebe más tarde"
+        );
+      }
+    }
+  }, [email, pass, props.history]);
 
   //--------------------------------------------------------------------------------
 
@@ -36,8 +67,15 @@ const Login = () => {
     try {
       const resp = await auth.createUserWithEmailAndPassword(email, pass);
       console.log("LOG try registrar", resp);
+      await db.collection("usuarios").doc(resp.user.email).set({
+        email: resp.user.email,
+        uid: resp.user.uid,
+      });
+      setEmail("");
+      setPass("");
+      props.history.push("/admin")
     } catch (error) {
-      console.log(error);
+      console.log("log error en registrar", error);
       if (error.code === "auth/invalid-email") {
         setError("Debe introducir un email con un formato válido");
       }
@@ -45,7 +83,7 @@ const Login = () => {
         setError("El email ya esta registrado");
       }
     }
-  }, [email, pass]);
+  }, [email, pass, props.history]);
 
   //--------------------------------------------------------------------------------
 
@@ -93,4 +131,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default withRouter(Login);
