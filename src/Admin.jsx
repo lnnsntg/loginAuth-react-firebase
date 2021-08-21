@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { withRouter } from "react-router-dom";
 import { auth } from "./firebase";
+import Tareas from "./Tareas";
 
 const Admin = (props) => {
   const [user, setUser] = useState(null);
@@ -16,9 +17,10 @@ const Admin = (props) => {
   }, [user, props.history]);
 
   return (
-    <div>
-      <h1>Ruta protegida</h1>
-      {user && <h3>{user.email}</h3>}
+    <div>      
+      {
+      user && (<Tareas user={user}></Tareas>  )
+      }
     </div>
   );
 };

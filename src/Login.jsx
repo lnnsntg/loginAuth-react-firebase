@@ -66,11 +66,15 @@ const Login = (props) => {
   const registrar = useCallback(async () => {
     try {
       const resp = await auth.createUserWithEmailAndPassword(email, pass);
-      console.log("LOG try registrar", resp);
+      console.log("LOG in try registrar", resp);
       await db.collection("usuarios").doc(resp.user.email).set({
         email: resp.user.email,
         uid: resp.user.uid,
       });
+      await db.collection(resp.user.uid).add({
+        name: "Tarea de ejemplo",
+        fecha: Date.now()
+      })
       setEmail("");
       setPass("");
       props.history.push("/admin")
