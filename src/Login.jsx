@@ -7,7 +7,7 @@ const Login = (props) => {
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
   const [error, setError] = useState(null);
-  const [esRegistro, setEsRegistro] = useState(true);
+  const [esRegistro, setEsRegistro] = useState(false);
 
   //--------------------------------------------------------------------------------
 
