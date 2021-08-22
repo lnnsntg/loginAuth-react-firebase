@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { db } from "./firebase";
+import moment from "moment";
+import "moment/locale/es"
+
 
 const Tareas = (props) => {
   const [tareas, setTareas] = useState([]);
@@ -114,7 +117,7 @@ const Tareas = (props) => {
           <ul className="list-group">
             {tareas.map((item) => (
               <li className="list-group-item px-2" key={item.id}>
-                {item.name}
+                {item.name} - {moment(item.fecha).format("LLL")}
                 <div>
                   <button
                     className="btn btn-danger btn-sm float-end ms-1 "
