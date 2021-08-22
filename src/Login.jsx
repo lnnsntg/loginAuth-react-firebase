@@ -37,25 +37,24 @@ const Login = (props) => {
 
   const login = useCallback(async () => {
     try {
-      const resp = await auth.signInWithEmailAndPassword(email, pass);
+      await auth.signInWithEmailAndPassword(email, pass);
       setEmail("");
       setPass("");
       setError(null);
       props.history.push("/admin");
     } catch (error) {
-      console.log("log error en login", error);
       if (error.code === "auth/user-not-found") {
         setError("Email no registrado");
       }
       if (error.code === "auth/wrong-password") {
-        setError("la contrasela apesta");
+        setError("la contraseña apesta");
       }
       if (error.code === "auth/too-many-requests") {
         setError(
           "Demasiados intentos: se ha bloqueado el acceso temporalmente, pruebe más tarde"
         );
+      }else { setError("Hubo un error")}
       }
-    }
   }, [email, pass, props.history]);
 
   //--------------------------------------------------------------------------------

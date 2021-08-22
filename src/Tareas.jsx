@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { db } from "./firebase";
 import moment from "moment";
-import "moment/locale/es"
-
+import "moment/locale/es";
 
 const Tareas = (props) => {
   const [tareas, setTareas] = useState([]);
@@ -13,7 +12,11 @@ const Tareas = (props) => {
   useEffect(() => {
     const obtenerDatos = async () => {
       try {
-        const data = await db.collection(props.user.uid).get();
+        const data = await db
+          .collection(props.user.uid)
+          .limit(10)
+          .orderBy("fecha")
+          .get();
         const arrayData = data.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
@@ -117,7 +120,7 @@ const Tareas = (props) => {
           <ul className="list-group">
             {tareas.map((item) => (
               <li className="list-group-item px-2" key={item.id}>
-                {item.name} - {moment(item.fecha).format("LLL")}
+                {item.name} - {moment(item.fecha).format("lll")}
                 <div>
                   <button
                     className="btn btn-danger btn-sm float-end ms-1 "
