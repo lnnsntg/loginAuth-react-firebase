@@ -2,7 +2,6 @@ import React, { useCallback, useState } from "react";
 import { withRouter } from "react-router-dom";
 import { auth, db } from "./firebase";
 
-
 const Login = (props) => {
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
@@ -43,16 +42,15 @@ const Login = (props) => {
       setEmail("");
       setPass("");
       setError(null);
-      props.history.push("/admin")
+      props.history.push("/admin");
     } catch (error) {
       console.log("log error en login", error);
       if (error.code === "auth/user-not-found") {
         setError("Email no registrado");
       }
       if (error.code === "auth/wrong-password") {
-        setError(
-          "la contrasela apesta"
-        )};
+        setError("la contrasela apesta");
+      }
       if (error.code === "auth/too-many-requests") {
         setError(
           "Demasiados intentos: se ha bloqueado el acceso temporalmente, pruebe más tarde"
@@ -73,11 +71,11 @@ const Login = (props) => {
       });
       await db.collection(resp.user.uid).add({
         name: "Tarea de ejemplo",
-        fecha: Date.now()
-      })
+        fecha: Date.now(),
+      });
       setEmail("");
       setPass("");
-      props.history.push("/admin")
+      props.history.push("/admin");
     } catch (error) {
       console.log("log error en registrar", error);
       if (error.code === "auth/invalid-email") {
@@ -117,16 +115,21 @@ const Login = (props) => {
               value={pass}
             />
             <div className="d-grid gap-3 mt-4 ">
-              <button className="btn btn-dark  col-12" type="submit">
+              <button className="btn btn-dark btn-lg  d-block" type="submit">
                 {esRegistro ? "Registrarse" : "Acceder"}
               </button>
               <button
-                className="btn btn-info btn-sm col-12"
+                className="btn btn-info d-block"
                 onClick={() => setEsRegistro(!esRegistro)}
                 type="button"
               >
                 {esRegistro ? "¿Ya estas registrado" : "¿No tienes cuenta?"}
               </button>
+              {!esRegistro ? (
+                <button className="btn  btn-danger d-block" type="button" onClick={() => props.history.push("/passreset")}>
+                  Recuperar contraseña
+                </button>
+              ) : null}
             </div>
           </form>
         </div>
