@@ -1,6 +1,9 @@
 import React, { useCallback, useState } from "react";
+import { withRouter } from "react-router-dom";
+import { auth } from "./firebase"
 
-const Reset = () => {
+
+const Reset = (props) => {
   const [email, setEmail] = useState("");
   const [error, setError] = useState(null);
 
@@ -20,12 +23,12 @@ const Reset = () => {
 
   const recuperarPass = useCallback(async () => {
     try {
-
+      await auth.sendPasswordResetEmail(email)
+      props.history.push("/login")
     } catch (error) {
-        console.log("clg en reset recuperar datos",error);
       setError(error.message);
     }
-  }, []);
+  }, [email, props.history]);
 
   //------------------------------------------------------------------
 
@@ -56,4 +59,4 @@ const Reset = () => {
   );
 };
 
-export default Reset;
+export default withRouter(Reset) ;

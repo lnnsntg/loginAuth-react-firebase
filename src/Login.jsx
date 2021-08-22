@@ -38,7 +38,6 @@ const Login = (props) => {
   const login = useCallback(async () => {
     try {
       const resp = await auth.signInWithEmailAndPassword(email, pass);
-      console.log("clg resp user in try", resp.user);
       setEmail("");
       setPass("");
       setError(null);
@@ -64,7 +63,6 @@ const Login = (props) => {
   const registrar = useCallback(async () => {
     try {
       const resp = await auth.createUserWithEmailAndPassword(email, pass);
-      console.log("LOG in try registrar", resp);
       await db.collection("usuarios").doc(resp.user.email).set({
         email: resp.user.email,
         uid: resp.user.uid,
